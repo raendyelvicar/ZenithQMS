@@ -1,0 +1,12 @@
+/.idea
+/CsDashboard.Web/obj
+/CsDashboard.Web/bin
+/Display.Web/obj
+/Display.Web/bin
+/Kiosk.Web/obj
+/Kiosk.Web/bin
+/Queue.API/obj
+/Queue.API/bin
+/User.API/User.API/obj
+/User.API/bin
+/.DS_Store
