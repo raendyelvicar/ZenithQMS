@@ -7,6 +7,8 @@
 /Kiosk.Web/bin
 /Queue.API/obj
 /Queue.API/bin
+/User.API/obj
 /User.API/User.API/obj
+/User.API/User.API
 /User.API/bin
 /.DS_Store
