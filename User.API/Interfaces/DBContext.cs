@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using User.API.Models;
 
 namespace User.API.Interfaces;
@@ -16,17 +14,17 @@ public partial class DBContext : DbContext
     {
     }
 
-    public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<UsrRole> UsrRoles { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<UsrUser> UsrUsers { get; set; }
 
-    public virtual DbSet<UserRole> UserRoles { get; set; }
+    public virtual DbSet<UsrUserRole> UsrUserRoles { get; set; }
 
-    public virtual DbSet<UserToken> UserTokens { get; set; }
-    
+    public virtual DbSet<UsrUserToken> UsrUserTokens { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Role>(entity =>
+        modelBuilder.Entity<UsrRole>(entity =>
         {
             entity.HasKey(e => e.pkid).HasName("Roles_pkey");
 
@@ -40,7 +38,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.updated_at).HasColumnType("timestamp without time zone");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<UsrUser>(entity =>
         {
             entity.HasKey(e => e.pkid).HasName("Users_pkey");
 
@@ -61,7 +59,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.username).HasMaxLength(50);
         });
 
-        modelBuilder.Entity<UserRole>(entity =>
+        modelBuilder.Entity<UsrUserRole>(entity =>
         {
             entity.HasKey(e => new { e.user_pkid, e.role_pkid }).HasName("UserRoles_pkey");
 
@@ -69,21 +67,22 @@ public partial class DBContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone");
 
-            entity.HasOne(d => d.role_pk).WithMany(p => p.UserRoles)
+            entity.HasOne(d => d.role_pk).WithMany(p => p.UsrUserRoles)
                 .HasForeignKey(d => d.role_pkid)
                 .HasConstraintName("UserRoles_role_pkid_fkey");
 
-            entity.HasOne(d => d.user_pk).WithMany(p => p.UserRoles)
+            entity.HasOne(d => d.user_pk).WithMany(p => p.UsrUserRoles)
                 .HasForeignKey(d => d.user_pkid)
                 .HasConstraintName("UserRoles_user_pkid_fkey");
         });
 
-        modelBuilder.Entity<UserToken>(entity =>
+        modelBuilder.Entity<UsrUserToken>(entity =>
         {
             entity.HasKey(e => e.pkid).HasName("UserTokens_pkey");
 
             entity.HasIndex(e => e.user_id, "UserTokens_user_id_key").IsUnique();
 
+            entity.Property(e => e.pkid).HasDefaultValueSql("nextval('\"UserTokens_pkid_seq\"'::regclass)");
             entity.Property(e => e.created_at)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone");
@@ -91,8 +90,8 @@ public partial class DBContext : DbContext
             entity.Property(e => e.revoked_at).HasColumnType("timestamp without time zone");
             entity.Property(e => e.updated_at).HasColumnType("timestamp without time zone");
 
-            entity.HasOne(d => d.user).WithOne(p => p.UserToken)
-                .HasForeignKey<UserToken>(d => d.user_id)
+            entity.HasOne(d => d.user).WithOne(p => p.UsrUserToken)
+                .HasForeignKey<UsrUserToken>(d => d.user_id)
                 .HasConstraintName("UserTokens_user_id_fkey");
         });
 
