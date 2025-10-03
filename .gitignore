@@ -10,3 +10,4 @@
 /User.API/obj
 /User.API/bin
 /.DS_Store
+/.gitignore
